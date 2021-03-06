@@ -42,7 +42,24 @@ def get_definite_age(subset):
                 date = calculate_age(subset["DOB"][item])
                 final_ages.append(date)
         else:
-            final_ages.append(np.nan)
+            age = subset["AGE"][item]
+            dob = calculate_age(subset["DOB"][item])
+            # Appends age if it exists and dob doesn't
+            if pd.notnull(age) and dob == np.nan:
+                final_ages.append(age)
+            # Appends dob if it exists and age doesn't
+            elif pd.notnull(dob) and age == np.nan:
+                final_ages.append(dob)
+            # If both exists, appends them if they are equal and, if they're not
+            # nan is appended, since it is most likely an error that would be mirrored on our data
+            elif pd.notnull(age) and pd.notnull(dob):
+                if age == dob:
+                    final_ages.append(age)
+                else:
+                    final_ages.append(np.nan)
+            # If none exists, appends nan
+            else:
+                final_ages.append(np.nan)
 
     return final_ages
 
@@ -54,7 +71,6 @@ def parse_domain(domain):
     """
 
     byte1, byte2 = [], []
-    print(domain)
     for item in domain:
         if len(item) == 2:
             byte1.append(item[0])
@@ -85,7 +101,7 @@ def lastgif_curr_diff(yymm):
 if __name__ == '__main__':
 
     #Data sets
-    
+
     dataset = ['dev.csv', 'comp.csv']
 
     #File path
@@ -149,7 +165,6 @@ if __name__ == '__main__':
     timediff = [lastgif_curr_diff(item) for item in data["LASTDATE"]]
 
     data.insert(4, "TIMEDIFF", timediff)
-
 
     ### EXPORT TO .csv
 
