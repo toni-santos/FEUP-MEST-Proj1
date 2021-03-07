@@ -98,6 +98,18 @@ def lastgif_curr_diff(yymm):
         return 6 - month
 
 
+def parse_mdmaud(mdmaud):
+
+    freq, amnt = [],[]
+    for item in mdmaud:
+        if item == "XXXX":
+            freq.append(np.nan)
+            amnt.append(np.nan)
+        else:
+            freq.append(item[1])
+            amnt.append(item[2])
+    return freq,amnt
+
 if __name__ == '__main__':
 
     #Data sets
@@ -106,7 +118,7 @@ if __name__ == '__main__':
 
     #File path
 
-    FILE_PATH = f'/home/gui1612/dev/FEUP-MEST-Proj1/files/{dataset[1]}'
+    FILE_PATH = f'./files/{dataset[1]}'
 
 
     #Parsing the excel sheet with pandas
@@ -152,7 +164,7 @@ if __name__ == '__main__':
     data.drop(ages_fields , axis=1, inplace=True)    
     data.insert(2, "AGE", ages)
 
-     ###DOMAIN BYTES PRE-PROCESSING
+    ###DOMAIN BYTES PRE-PROCESSING
 
     domain_byte1, domain_byte2 = parse_domain(data["DOMAIN"])
 
@@ -166,6 +178,18 @@ if __name__ == '__main__':
 
     data.insert(4, "TIMEDIFF", timediff)
 
+    ###MDMAUD PRE-PROCESSING
+
+    ## TODO: PLS LOOK AT THIS IDK IF IT FUNFATES WELL
+
+    freqgiv, amntgiv = parse_mdmaud(data["MDMAUD"])
+
+    data.drop("MDMAUD", axis=1, inplace=True)
+
+    data.insert(2, "FREQGIV", freqgiv)
+    data.insert(2, "AMNTGIV", amntgiv)
+
+    print(data)
     ### EXPORT TO .csv
 
-    pd.DataFrame.to_csv(data, "/home/gui1612/dev/FEUP-MEST-Proj1/comp_sanitized.csv", index=False)
+    # pd.DataFrame.to_csv(data, "/home/gui1612/dev/FEUP-MEST-Proj1/comp_sanitized.csv", index=False)
