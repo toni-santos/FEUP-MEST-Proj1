@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pylab as plt
+
 
 def calculate_age(yymm):
     """
@@ -23,8 +23,6 @@ def calculate_age(yymm):
         return 1997 - year
     else:
         return 1997 - year + 1
-
-
 
 
 def get_definite_age(subset):
@@ -99,16 +97,21 @@ def lastgif_curr_diff(yymm):
 
 
 def parse_mdmaud(mdmaud):
+    """
+    Parses MDMAUD field into 2 different fields (freq and amnt),
+    which, respectively, contain 2nd and 3rd bytes of mdmaud
+    """
 
-    freq, amnt = [],[]
+    freq, amnt = [], []
     for item in mdmaud:
-        if item == "XXXX":
+        if item == "XXXX":          #The donor is not a major donor
             freq.append(np.nan)
             amnt.append(np.nan)
         else:
-            freq.append(item[1])
-            amnt.append(item[2])
-    return freq,amnt
+            freq.append(item[1])    #2nd byte -> Frequency of giving
+            amnt.append(item[2])    #3rd byte -> Amount of giving
+    return freq, amnt
+
 
 if __name__ == '__main__':
 
@@ -127,8 +130,6 @@ if __name__ == '__main__':
     #Parsing .csv files with pandas
     else:    
         data = pd.read_csv(FILE_PATH)
-
-# TODO:              maybe use CLUSTER
 
     #Colums we didn't found useful
     cols_to_remove = ["ODATEDW", "STATE", "ZIP", "MAILCODE", "CLUSTER", "HOMEOWNR"
@@ -178,9 +179,7 @@ if __name__ == '__main__':
 
     data.insert(4, "TIMEDIFF", timediff)
 
-    ###MDMAUD PRE-PROCESSING
-
-    ## TODO: PLS LOOK AT THIS IDK IF IT FUNFATES WELL
+    ### MDMAUD PRE-PROCESSING
 
     freqgiv, amntgiv = parse_mdmaud(data["MDMAUD"])
 
@@ -189,7 +188,11 @@ if __name__ == '__main__':
     data.insert(2, "FREQGIV", freqgiv)
     data.insert(2, "AMNTGIV", amntgiv)
 
-    print(data)
+    # Tests (Uncomment the line bellow)  
+    #print(data)
+
     ### EXPORT TO .csv
 
-    # pd.DataFrame.to_csv(data, "/home/gui1612/dev/FEUP-MEST-Proj1/comp_sanitized.csv", index=False)
+    file_name = "comp_sanitized.csv"        # Name of the file to be exported
+    
+    pd.DataFrame.to_csv(data, f"/home/gui1612/dev/FEUP-MEST-Proj1/{file_name}", index=False)
