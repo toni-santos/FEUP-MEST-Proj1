@@ -20,9 +20,9 @@ def calculate_age(yymm):
     month = int(strym[2:])
 
     if month > 6:
-        return 1997 - year
+        return 1996 - year
     else:
-        return 1997 - year + 1
+        return 1996 - year + 1
 
 
 def get_definite_age(subset):
@@ -65,7 +65,7 @@ def get_definite_age(subset):
 def parse_domain(domain):
     """
     Receives the DOMAIN field in the format yymm
-    and turns it into 2 different fiels with each byte
+    and turns it into 2 different fields with each byte
     """
 
     byte1, byte2 = [], []
@@ -90,7 +90,7 @@ def lastgif_curr_diff(yymm):
     month = int(strym[2:])
 
     if year < 1997:
-        return 12 * (1997 - year) + 6
+        return 12 * (1996 - year) + (12 - month) + 6 
 
     elif year == 1997:
         return 6 - month
@@ -132,7 +132,7 @@ if __name__ == '__main__':
         data = pd.read_csv(FILE_PATH)
 
     #Colums we didn't found useful
-    cols_to_remove = ["ODATEDW", "STATE", "ZIP", "MAILCODE", "CLUSTER", "HOMEOWNR"
+    cols_to_remove = ["ODATEDW", "ZIP", "MAILCODE", "HOMEOWNR"
                       , "CHILD03", "CHILD07", "CHILD12", "CHILD18", "GENDER"
                       , "MBCRAFT", "MBGARDEN", "MBBOOKS", "MBCOLECT", "MAGFAML"
                       , "MAGFEM", "MAGMALE", "PUBGARDN", "PUBCULIN", "PUBCULIN"
@@ -142,7 +142,7 @@ if __name__ == '__main__':
                       , "TIMELAG", "AVGGIFT", "CLUSTER2", "GEOCODE2"]
 
     #Columns we found useful
-    cols_to_use = ["DOB", "AGE", "AGEFLAG" "MDMAUD", "DOMAIN", "LASTDATE"
+    cols_to_use = ["DOB", "STATE", "CLUSTER", "AGE", "AGEFLAG" "MDMAUD", "DOMAIN", "LASTDATE"
                    , "NUMCHLD", "INCOME", "WEALTH", "HIT", "NGIFTALL"
                    , "CONTROLN", "TARGET_B"]
 
@@ -163,36 +163,37 @@ if __name__ == '__main__':
     ages = get_definite_age(ages_subset)
 
     data.drop(ages_fields , axis=1, inplace=True)    
-    data.insert(2, "AGE", ages)
+    data.insert(1, "AGE", ages)
 
     ###DOMAIN BYTES PRE-PROCESSING
 
     domain_byte1, domain_byte2 = parse_domain(data["DOMAIN"])
 
-    data.drop("DOMAIN", axis=1, inplace=True)
+    
+    #data.drop("DOMAIN", axis=1, inplace=True)
 
-    data.insert(2, "UCITY", domain_byte1)
-    data.insert(2, "SESNEI", domain_byte2)
+    data.insert(1, "UCITY", domain_byte1)
+    data.insert(1, "SESNEI", domain_byte2)
 
 
     timediff = [lastgif_curr_diff(item) for item in data["LASTDATE"]]
 
-    data.insert(4, "TIMEDIFF", timediff)
+    data.insert(1, "TIMEDIFF", timediff)
 
-    ### MDMAUD PRE-PROCESSING
+    ### MDMAUD PRE-PROCESSING (at the moment we are not using MDMAUD, as a little percentage of people have it filled)
 
-    freqgiv, amntgiv = parse_mdmaud(data["MDMAUD"])
+    #freqgiv, amntgiv = parse_mdmaud(data["MDMAUD"])
 
-    data.drop("MDMAUD", axis=1, inplace=True)
+    #data.drop("MDMAUD", axis=1, inplace=True)
 
-    data.insert(2, "FREQGIV", freqgiv)
-    data.insert(2, "AMNTGIV", amntgiv)
+    #data.insert(1, "FREQGIV", freqgiv)
+    #data.insert(1, "AMNTGIV", amntgiv)
 
     # Tests (Uncomment the line bellow)  
-    #print(data)
+    print(data)
 
     ### EXPORT TO .csv
 
     file_name = "comp_sanitized.csv"        # Name of the file to be exported
     
-    pd.DataFrame.to_csv(data, f"/home/gui1612/dev/FEUP-MEST-Proj1/{file_name}", index=False)
+    pd.DataFrame.to_csv(data, f"./{file_name}", index=False)
