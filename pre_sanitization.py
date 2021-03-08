@@ -121,7 +121,7 @@ if __name__ == '__main__':
 
     #File path
 
-    FILE_PATH = f'./files/{dataset[1]}'
+    FILE_PATH = f'./files/{dataset[0]}'
 
 
     #Parsing the excel sheet with pandas
@@ -132,19 +132,19 @@ if __name__ == '__main__':
         data = pd.read_csv(FILE_PATH)
 
     #Colums we didn't found useful
-    cols_to_remove = ["ODATEDW", "ZIP", "MAILCODE", "HOMEOWNR"
-                      , "CHILD03", "CHILD07", "CHILD12", "CHILD18", "GENDER"
+    cols_to_remove = ["ODATEDW", "ZIP", "MAILCODE"
+                      , "CHILD03", "CHILD07", "CHILD12", "CHILD18"
                       , "MBCRAFT", "MBGARDEN", "MBBOOKS", "MBCOLECT", "MAGFAML"
                       , "MAGFEM", "MAGMALE", "PUBGARDN", "PUBCULIN", "PUBCULIN"
                       , "PUBHLTH", "PUBDOITY", "PUBNEWFN", "PUBPHOTO", "PUBOPP"
                       , "NGIFTALL", "CARDGIFT", "MINRAMNT", "MINRDATE", "MAXRAMNT"
-                      , "MAXRDATE", "LASTGIFT", "FISTDATE", "NEXTDATE"
-                      , "TIMELAG", "AVGGIFT", "CLUSTER2", "GEOCODE2"]
+                      , "MAXRDATE", "FISTDATE", "NEXTDATE"
+                      , "CLUSTER2", "GEOCODE2"]
 
     #Columns we found useful
     cols_to_use = ["DOB", "STATE", "CLUSTER", "AGE", "AGEFLAG" "MDMAUD", "DOMAIN", "LASTDATE"
-                   , "NUMCHLD", "INCOME", "WEALTH", "HIT", "NGIFTALL"
-                   , "CONTROLN", "TARGET_B"]
+                   , "NUMCHLD", "INCOME", "WEALTH", "HIT", "NGIFTALL", "LASTGIFT", "TIMELAG"
+                   , "CONTROLN", "TARGET_B", "AVGGIFT", "HOMEOWNR", "GENDER", "RAMNTALL"]
 
     #Removing cols_to_remove
 
@@ -194,6 +194,6 @@ if __name__ == '__main__':
 
     ### EXPORT TO .csv
 
-    file_name = "comp_sanitized.csv"        # Name of the file to be exported
+    file_name = "dev_sanitized.csv"        # Name of the file to be exported
     
     pd.DataFrame.to_csv(data, f"./{file_name}", index=False)
