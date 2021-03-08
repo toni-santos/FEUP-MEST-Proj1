@@ -20,9 +20,9 @@ def calculate_age(yymm):
     month = int(strym[2:])
 
     if month > 6:
-        return 1996 - year
+        return 1997 - year
     else:
-        return 1996 - year + 1
+        return 1997 - year + 1
 
 
 def get_definite_age(subset):
@@ -121,7 +121,7 @@ if __name__ == '__main__':
 
     #File path
 
-    FILE_PATH = f'./files/{dataset[0]}'
+    FILE_PATH = f'./files/{dataset[1]}'
 
 
     #Parsing the excel sheet with pandas
@@ -194,6 +194,6 @@ if __name__ == '__main__':
 
     ### EXPORT TO .csv
 
-    file_name = "dev_sanitized.csv"        # Name of the file to be exported
+    file_name = "comp_sanitized.csv"        # Name of the file to be exported
     
     pd.DataFrame.to_csv(data, f"./{file_name}", index=False)
