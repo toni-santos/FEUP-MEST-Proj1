@@ -15,7 +15,7 @@
       <operator activated="true" class="retrieve" compatibility="9.8.001" expanded="true" height="68" name="Training Data" width="90" x="45" y="34">
         <parameter key="repository_entry" value="//Local Repository/keko_dev"/>
       </operator>
-      <operator activated="true" class="subprocess" compatibility="9.8.001" expanded="true" height="82" name="Pre-Processing TrD" width="90" x="179" y="34">
+      <operator activated="true" class="subprocess" compatibility="9.8.001" expanded="true" height="82" name="Pre Processing TrD" width="90" x="179" y="34">
         <process expanded="true">
           <operator activated="true" class="numerical_to_binominal" compatibility="9.8.001" expanded="true" height="82" name="Numerical to Binominal" width="90" x="45" y="34">
             <parameter key="attribute_filter_type" value="subset"/>
@@ -437,7 +437,7 @@
       <operator activated="true" class="retrieve" compatibility="9.8.001" expanded="true" height="68" name="Test Data" width="90" x="45" y="136">
         <parameter key="repository_entry" value="//Local Repository/keko_sanitized"/>
       </operator>
-      <operator activated="true" class="subprocess" compatibility="9.8.001" expanded="true" height="82" name="Pre-Processing TD" width="90" x="179" y="136">
+      <operator activated="true" class="subprocess" compatibility="9.8.001" expanded="true" height="82" name="Pre Processing TD" width="90" x="179" y="136">
         <process expanded="true">
           <operator activated="true" class="set_role" compatibility="9.8.001" expanded="true" height="82" name="Set Role (2)" width="90" x="380" y="34">
             <parameter key="attribute_name" value="CLUSTER"/>
@@ -719,62 +719,119 @@
         <list key="application_parameters"/>
         <parameter key="create_view" value="false"/>
       </operator>
-      <operator activated="true" class="replace" compatibility="9.8.001" expanded="true" height="82" name="Replace (9)" width="90" x="581" y="85">
-        <parameter key="attribute_filter_type" value="subset"/>
-        <parameter key="attribute" value=""/>
-        <parameter key="attributes" value="prediction(TARGET_B)"/>
-        <parameter key="use_except_expression" value="false"/>
-        <parameter key="value_type" value="nominal"/>
-        <parameter key="use_value_type_exception" value="false"/>
-        <parameter key="except_value_type" value="file_path"/>
-        <parameter key="block_type" value="single_value"/>
-        <parameter key="use_block_type_exception" value="false"/>
-        <parameter key="except_block_type" value="single_value"/>
-        <parameter key="invert_selection" value="false"/>
-        <parameter key="include_special_attributes" value="true"/>
-        <parameter key="replace_what" value="true"/>
-        <parameter key="replace_by" value="1"/>
+      <operator activated="true" class="subprocess" compatibility="9.8.001" expanded="true" height="82" name="Post Processing" width="90" x="581" y="85">
+        <process expanded="true">
+          <operator activated="true" class="replace" compatibility="9.8.001" expanded="true" height="82" name="True to 1" width="90" x="45" y="34">
+            <parameter key="attribute_filter_type" value="subset"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value="prediction(TARGET_B)"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="nominal"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="file_path"/>
+            <parameter key="block_type" value="single_value"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="single_value"/>
+            <parameter key="invert_selection" value="false"/>
+            <parameter key="include_special_attributes" value="true"/>
+            <parameter key="replace_what" value="true"/>
+            <parameter key="replace_by" value="1"/>
+          </operator>
+          <operator activated="true" class="replace" compatibility="9.8.001" expanded="true" height="82" name="False to 0" width="90" x="179" y="34">
+            <parameter key="attribute_filter_type" value="single"/>
+            <parameter key="attribute" value="prediction(TARGET_B)"/>
+            <parameter key="attributes" value=""/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="nominal"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="file_path"/>
+            <parameter key="block_type" value="single_value"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="single_value"/>
+            <parameter key="invert_selection" value="false"/>
+            <parameter key="include_special_attributes" value="true"/>
+            <parameter key="replace_what" value="false"/>
+            <parameter key="replace_by" value="0"/>
+          </operator>
+          <operator activated="true" class="set_role" compatibility="9.8.001" expanded="true" height="82" name="Remove Special Roles CLUSTER" width="90" x="313" y="34">
+            <parameter key="attribute_name" value="CLUSTER"/>
+            <parameter key="target_role" value="regular"/>
+            <list key="set_additional_roles"/>
+          </operator>
+          <operator activated="true" class="set_role" compatibility="9.8.001" expanded="true" height="82" name="Remove Special Roles confidence(true)" width="90" x="45" y="136">
+            <parameter key="attribute_name" value="confidence(true)"/>
+            <parameter key="target_role" value="regular"/>
+            <list key="set_additional_roles"/>
+          </operator>
+          <operator activated="true" class="set_role" compatibility="9.8.001" expanded="true" height="82" name="Remove Special Roles confidence(false)" width="90" x="179" y="136">
+            <parameter key="attribute_name" value="confidence(false)"/>
+            <parameter key="target_role" value="regular"/>
+            <list key="set_additional_roles"/>
+          </operator>
+          <operator activated="true" class="set_role" compatibility="9.8.001" expanded="true" height="82" name="Remove Special Roles prediction(TARGET_B)" width="90" x="313" y="136">
+            <parameter key="attribute_name" value="prediction(TARGET_B)"/>
+            <parameter key="target_role" value="regular"/>
+            <list key="set_additional_roles"/>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Final Attributes" width="90" x="45" y="238">
+            <parameter key="attribute_filter_type" value="subset"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value="CONTROLN|prediction(TARGET_B)"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="false"/>
+            <parameter key="include_special_attributes" value="false"/>
+          </operator>
+          <operator activated="true" class="rename" compatibility="9.8.001" expanded="true" height="82" name="Rename" width="90" x="179" y="238">
+            <parameter key="old_name" value="prediction(TARGET_B)"/>
+            <parameter key="new_name" value="TARGET_B"/>
+            <list key="rename_additional_attributes"/>
+          </operator>
+          <operator activated="true" class="order_attributes" compatibility="9.8.001" expanded="true" height="82" name="Reorder Attributes" width="90" x="313" y="238">
+            <parameter key="sort_mode" value="user specified"/>
+            <parameter key="attribute_ordering" value="CONTROLN"/>
+            <parameter key="use_regular_expressions" value="false"/>
+            <parameter key="handle_unmatched" value="append"/>
+            <parameter key="sort_direction" value="ascending"/>
+          </operator>
+          <operator activated="true" class="write_csv" compatibility="9.8.001" expanded="true" height="82" name="Write CSV" width="90" x="447" y="34">
+            <parameter key="column_separator" value=";"/>
+            <parameter key="write_attribute_names" value="true"/>
+            <parameter key="quote_nominal_values" value="true"/>
+            <parameter key="format_date_attributes" value="true"/>
+            <parameter key="append_to_file" value="false"/>
+            <parameter key="encoding" value="SYSTEM"/>
+          </operator>
+          <connect from_port="in 1" to_op="True to 1" to_port="example set input"/>
+          <connect from_op="True to 1" from_port="example set output" to_op="False to 0" to_port="example set input"/>
+          <connect from_op="False to 0" from_port="example set output" to_op="Remove Special Roles CLUSTER" to_port="example set input"/>
+          <connect from_op="Remove Special Roles CLUSTER" from_port="example set output" to_op="Remove Special Roles confidence(true)" to_port="example set input"/>
+          <connect from_op="Remove Special Roles confidence(true)" from_port="example set output" to_op="Remove Special Roles confidence(false)" to_port="example set input"/>
+          <connect from_op="Remove Special Roles confidence(false)" from_port="example set output" to_op="Remove Special Roles prediction(TARGET_B)" to_port="example set input"/>
+          <connect from_op="Remove Special Roles prediction(TARGET_B)" from_port="example set output" to_op="Select Final Attributes" to_port="example set input"/>
+          <connect from_op="Select Final Attributes" from_port="example set output" to_op="Rename" to_port="example set input"/>
+          <connect from_op="Rename" from_port="example set output" to_op="Reorder Attributes" to_port="example set input"/>
+          <connect from_op="Reorder Attributes" from_port="example set output" to_op="Write CSV" to_port="input"/>
+          <connect from_op="Write CSV" from_port="through" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
       </operator>
-      <operator activated="true" class="replace" compatibility="9.8.001" expanded="true" height="82" name="Replace (10)" width="90" x="715" y="85">
-        <parameter key="attribute_filter_type" value="single"/>
-        <parameter key="attribute" value="prediction(TARGET_B)"/>
-        <parameter key="attributes" value=""/>
-        <parameter key="use_except_expression" value="false"/>
-        <parameter key="value_type" value="nominal"/>
-        <parameter key="use_value_type_exception" value="false"/>
-        <parameter key="except_value_type" value="file_path"/>
-        <parameter key="block_type" value="single_value"/>
-        <parameter key="use_block_type_exception" value="false"/>
-        <parameter key="except_block_type" value="single_value"/>
-        <parameter key="invert_selection" value="false"/>
-        <parameter key="include_special_attributes" value="true"/>
-        <parameter key="replace_what" value="false"/>
-        <parameter key="replace_by" value="0"/>
-      </operator>
-      <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes" width="90" x="849" y="85">
-        <parameter key="attribute_filter_type" value="subset"/>
-        <parameter key="attribute" value=""/>
-        <parameter key="attributes" value="prediction(TARGET_B)|CONTROLN"/>
-        <parameter key="use_except_expression" value="false"/>
-        <parameter key="value_type" value="attribute_value"/>
-        <parameter key="use_value_type_exception" value="false"/>
-        <parameter key="except_value_type" value="time"/>
-        <parameter key="block_type" value="attribute_block"/>
-        <parameter key="use_block_type_exception" value="false"/>
-        <parameter key="except_block_type" value="value_matrix_row_start"/>
-        <parameter key="invert_selection" value="false"/>
-        <parameter key="include_special_attributes" value="false"/>
-      </operator>
-      <connect from_op="Training Data" from_port="output" to_op="Pre-Processing TrD" to_port="in 1"/>
-      <connect from_op="Pre-Processing TrD" from_port="out 1" to_op="Cross Validation" to_port="example set"/>
+      <connect from_op="Training Data" from_port="output" to_op="Pre Processing TrD" to_port="in 1"/>
+      <connect from_op="Pre Processing TrD" from_port="out 1" to_op="Cross Validation" to_port="example set"/>
       <connect from_op="Cross Validation" from_port="model" to_op="Apply Model" to_port="model"/>
       <connect from_op="Cross Validation" from_port="performance 1" to_port="result 2"/>
-      <connect from_op="Test Data" from_port="output" to_op="Pre-Processing TD" to_port="in 1"/>
-      <connect from_op="Pre-Processing TD" from_port="out 1" to_op="Apply Model" to_port="unlabelled data"/>
-      <connect from_op="Apply Model" from_port="labelled data" to_op="Replace (9)" to_port="example set input"/>
-      <connect from_op="Replace (9)" from_port="example set output" to_op="Replace (10)" to_port="example set input"/>
-      <connect from_op="Replace (10)" from_port="example set output" to_op="Select Attributes" to_port="example set input"/>
-      <connect from_op="Select Attributes" from_port="example set output" to_port="result 1"/>
+      <connect from_op="Test Data" from_port="output" to_op="Pre Processing TD" to_port="in 1"/>
+      <connect from_op="Pre Processing TD" from_port="out 1" to_op="Apply Model" to_port="unlabelled data"/>
+      <connect from_op="Apply Model" from_port="labelled data" to_op="Post Processing" to_port="in 1"/>
+      <connect from_op="Post Processing" from_port="out 1" to_port="result 1"/>
       <portSpacing port="source_input 1" spacing="0"/>
       <portSpacing port="sink_result 1" spacing="0"/>
       <portSpacing port="sink_result 2" spacing="0"/>
