@@ -113,6 +113,7 @@ def parse_mdmaud(mdmaud):
     return freq, amnt
 
 
+
 if __name__ == '__main__':
 
     #Data sets
@@ -121,7 +122,7 @@ if __name__ == '__main__':
 
     #File path
 
-    FILE_PATH = f'./files/{dataset[1]}'
+    FILE_PATH = f'./given_files/{dataset[1]}'
 
 
     #Parsing the excel sheet with pandas
@@ -131,7 +132,7 @@ if __name__ == '__main__':
     else:    
         data = pd.read_csv(FILE_PATH)
 
-    #Colums we didn't found useful
+    #Colums we didn't found useful (Columns in this list will be removed)
     cols_to_remove = ["ODATEDW", "ZIP", "MAILCODE"
                       , "CHILD03", "CHILD07", "CHILD12", "CHILD18"
                       , "MBCRAFT", "MBGARDEN", "MBBOOKS", "MBCOLECT", "MAGFAML"
@@ -141,7 +142,8 @@ if __name__ == '__main__':
                       , "MAXRDATE", "FISTDATE", "NEXTDATE"
                       , "CLUSTER2", "GEOCODE2"]
 
-    #Columns we found useful
+    #Columns we found useful (This list won't affect the code, but it is more comprehensible)
+
     cols_to_use = ["DOB", "STATE", "CLUSTER", "AGE", "AGEFLAG" "MDMAUD", "DOMAIN", "LASTDATE"
                    , "NUMCHLD", "INCOME", "WEALTH", "HIT", "NGIFTALL", "LASTGIFT", "TIMELAG"
                    , "CONTROLN", "TARGET_B", "AVGGIFT", "HOMEOWNR", "GENDER", "RAMNTALL"]
@@ -175,12 +177,13 @@ if __name__ == '__main__':
     data.insert(1, "UCITY", domain_byte1)
     data.insert(1, "SESNEI", domain_byte2)
 
+    ###TIME BETWEEN LAST DONATION AND CURRENT DATE
 
     timediff = [lastgif_curr_diff(item) for item in data["LASTDATE"]]
 
     data.insert(1, "TIMEDIFF", timediff)
 
-    ### MDMAUD PRE-PROCESSING (at the moment we are not using MDMAUD, as a little percentage of people have it filled)
+    ### MDMAUD PRE-PROCESSING (at the moment we are not using MDMAUD, as we are parsing it with Rapid Minner)  
 
     #freqgiv, amntgiv = parse_mdmaud(data["MDMAUD"])
 
@@ -195,5 +198,5 @@ if __name__ == '__main__':
     ### EXPORT TO .csv
 
     file_name = "comp_sanitized.csv"        # Name of the file to be exported
-    
-    pd.DataFrame.to_csv(data, f"./{file_name}", index=False)
+
+    pd.DataFrame.to_csv(data, f"./sanitized_files/{file_name}", index=False)
