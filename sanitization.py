@@ -5,7 +5,7 @@ import numpy as np
 def calculate_age(yymm):
     """
     Receives the date of birth in the format yymm and calculates the current age
-    related to the time of donation
+    in relation to the date when of the fund raising occurred
     """
     strym = str(yymm)
 
@@ -28,6 +28,9 @@ def calculate_age(yymm):
 def get_definite_age(subset):
     """
     Calculates the age of the person based on the AGEFLAG field (which will choose the origin of the age)
+    If the ageflag is 'E' the age comes directly from the age field and if it is 'I' we calculate it based on the DOB field.
+    If the ageflag has no value we check both fields and make sure DOB and AGE display the same value. 
+    If so, we use it. If they don't match, we place a NaN
     """
 
     final_ages = []
@@ -64,8 +67,9 @@ def get_definite_age(subset):
 
 def parse_domain(domain):
     """
-    Receives the DOMAIN field in the format yymm
-    and turns it into 2 different fields with each byte
+    Receives the DOMAIN field and turns it into
+    2 different fields, each one containg a different
+    DOMAIN byte
     """
 
     byte1, byte2 = [], []
@@ -81,9 +85,11 @@ def parse_domain(domain):
 
 def lastgif_curr_diff(yymm):
     """
-    Return the number of months between the date of the donation
-    and the date of the last donation
+    Returns the number of months between the 
+    date of the fund raising and the date of
+    the last donation
     """
+
     strym = str(yymm)
     
     year = 1900 + int(strym[:2])
@@ -98,8 +104,8 @@ def lastgif_curr_diff(yymm):
 
 def parse_mdmaud(mdmaud):
     """
-    Parses MDMAUD field into 2 different fields (freq and amnt),
-    which, respectively, contain 2nd and 3rd bytes of mdmaud
+    Parses MDMAUD field into 2 different fields (FREQ and AMNT),
+    which, respectively, contain the 2nd and 3rd bytes of MDMAUD
     """
 
     freq, amnt = [], []
