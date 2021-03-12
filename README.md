@@ -1,6 +1,6 @@
 # FEUP-MEST-Proj1
 
-First project developed in the MEST course unit A FUND RAISING NET RETURN PREDICTION MODEL
+First project developed in the MEST course unit
 
 ## Project Infos
 
@@ -15,5 +15,5 @@ This repository, and every other FEUP-COURSE* repos on GitHub correspond to scho
 
 ## Notes
 
-- We started by pre-processing the given data with python (using [pandas](https://pandas.pydata.org/) and [numpy](https://numpy.org/)) and then we made the final pre-processing and data cleaning inside Rapid Minner
+- We started by pre-processing the given data with python (using [pandas](https://pandas.pydata.org/) and [numpy](https://numpy.org/)) and then we made the final pre-processing and data cleaning inside [Rapid Miner](https://rapidminer.com/)
 - Many of the pre-processing is repeated on both platforms for learning purposes, since the main goal of this project was to introduce us to the data science field 
